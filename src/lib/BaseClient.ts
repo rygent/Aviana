@@ -1,6 +1,7 @@
 import { BitField, Client, Options, Partials, PermissionsBitField, PermissionsString } from 'discord.js';
 import { AllowedMentionsTypes, GatewayIntentBits } from 'discord-api-types/v10';
 import { Collection } from '@discordjs/collection';
+import { Internationalization } from './modules/Internationalization.js';
 import { PrismaClient } from '@prisma/client';
 import type { ClientOptions } from './types/Global.js';
 import type Interaction from './structures/Interaction.js';
@@ -17,6 +18,7 @@ export default class BaseClient<Ready extends boolean = boolean> extends Client<
 	public events: Collection<string, Event>;
 	public cooldowns: Collection<string, Collection<string, number>>;
 
+	public i18n: Internationalization;
 	public prisma: PrismaClient;
 	public logger: Logger;
 	public utils: Util;
@@ -63,6 +65,7 @@ export default class BaseClient<Ready extends boolean = boolean> extends Client<
 		this.events = new Collection();
 		this.cooldowns = new Collection();
 
+		this.i18n = new Internationalization();
 		this.prisma = new PrismaClient();
 		this.logger = new Logger(this);
 		this.utils = new Util(this);
@@ -97,6 +100,7 @@ export default class BaseClient<Ready extends boolean = boolean> extends Client<
 		await this.utils.loadInteractions();
 		await this.utils.loadCommands();
 		await this.utils.loadEvents();
+		await this.i18n.init();
 		await this.prisma.$connect();
 		void super.login(token as string);
 	}

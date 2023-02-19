@@ -1,6 +1,7 @@
 import type BaseClient from '../BaseClient.js';
 import { BitField, Message, PermissionsBitField, PermissionsString } from 'discord.js';
 import type { MessageCommandOptions } from '../types/Global.js';
+import type { Internationalization } from '../modules/Internationalization.js';
 import type { Awaitable } from '@sapphire/utilities';
 
 export default abstract class Command {
@@ -32,5 +33,5 @@ export default abstract class Command {
 		this.nsfw = options.nsfw ?? false;
 	}
 
-	public abstract execute(message: Message, args?: string[]): Awaitable<unknown>;
+	public abstract execute(message: Message, args?: string[], i18n?: Internationalization): Awaitable<unknown>;
 }

@@ -9,6 +9,7 @@ datasource db {
 
 model Guild {
   id        String   @id @map("_id") @db.String
+  locale    String   @default("en-US")
   caseCount Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

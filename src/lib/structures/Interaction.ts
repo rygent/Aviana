@@ -1,6 +1,7 @@
 import type BaseClient from '../BaseClient.js';
 import { AutocompleteInteraction, BitField, CommandInteraction, PermissionsBitField, PermissionsString } from 'discord.js';
 import type { InteractionCommandOptions } from '../types/Global.js';
+import type { Internationalization } from '../modules/Internationalization.js';
 import type { Awaitable } from '@sapphire/utilities';
 
 export default abstract class Interaction {
@@ -32,7 +33,7 @@ export default abstract class Interaction {
 		this.nsfw = options.nsfw ?? false;
 	}
 
-	public abstract execute(interaction: CommandInteraction<'cached' | 'raw'>): Awaitable<unknown>;
+	public abstract execute(interaction: CommandInteraction<'cached' | 'raw'>, i18n?: Internationalization): Awaitable<unknown>;
 
 	// @ts-expect-error
 	public autocomplete(interaction: AutocompleteInteraction<'cached' | 'raw'>): Awaitable<unknown> {

@@ -1,0 +1,10 @@
+{
+  "COMMAND_DISABLED": "This command is currently inaccessible.",
+  "GUILD_ONLY": "This command cannot be used out of a server.",
+  "MISSING_MEMBER_PERMISSION": "You lack the {{permission}} permission(s) to continue.",
+  "MISSING_CLIENT_PERMISSION": "I lack the {{permission}} permission(s) to continue.",
+  "NSFW_COMMAND": "This command is only accessible on **NSFW** channels.",
+  "OWNER_ONLY": "This command is only accessible for developers.",
+  "COOLDOWN": "You've to wait {{duration}} second(s) to continue.",
+  "ERROR_OCCURRED": "An error has occured when executing this command, our developers have been informed.\nIf the issue persists, please contact us in our [Support Server]({{link}})."
+}

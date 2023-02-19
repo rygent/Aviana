@@ -16,6 +16,16 @@ export default class extends Event {
 	public async run(message: Message<true>) {
 		if (message.author.bot || !message.inGuild()) return;
 
+		const prisma = await this.client.prisma.guild.findFirst({
+			where: { id: message.guildId },
+			select: { locale: true }
+		});
+
+		let { i18n } = this.client;
+		if (message.inGuild()) {
+			i18n = this.client.i18n.setLocale(prisma!.locale);
+		}
+
 		const mentionRegexPrefix = RegExp(`^<@!?${this.client.user.id}> `);
 
 		const prefix = message.content.match(mentionRegexPrefix)
@@ -40,7 +50,7 @@ export default class extends Event {
 					const missing = message.channel.permissionsFor(message.member as GuildMember).missing(memberPermCheck) as string[];
 
 					if (missing.length) {
-						const replies = `You lack the ${formatArray(missing.map(item => underscore(italic(formatPermissions(item)))))} permission(s) to continue.`;
+						const replies = `${i18n.format('misc:MISSING_MEMBER_PERMISSION', { permission: formatArray(missing.map(item => underscore(italic(formatPermissions(item))))) })}`;
 
 						return message.reply({ content: replies });
 					}
@@ -55,7 +65,7 @@ export default class extends Event {
 						.missing(clientPermCheck) as string[];
 
 					if (missing.length) {
-						const replies = `I lack the ${formatArray(missing.map(item => underscore(italic(formatPermissions(item)))))} permission(s) to continue.`;
+						const replies = `${i18n.format('misc:MISSING_CLIENT_PERMISSION', { permission: formatArray(missing.map(item => underscore(italic(formatPermissions(item))))) })}`;
 
 						return message.reply({ content: replies });
 					}
@@ -78,7 +88,7 @@ export default class extends Event {
 
 				if (now < expired) {
 					const duration = (expired - now) / 1e3;
-					return message.reply({ content: `You've to wait ${bold(duration.toFixed(2))} second(s) to continue.` })
+					return message.reply({ content: `${i18n.format('misc:COOLDOWN', { duration: bold(duration.toFixed(2)) })}` })
 						.then(m => setTimeout(() => m.delete(), expired - now));
 				}
 			}
@@ -88,16 +98,13 @@ export default class extends Event {
 
 			try {
 				await message.channel.sendTyping();
-				await command.execute(message, args);
+				await command.execute(message, args, i18n);
 			} catch (e: unknown) {
 				this.client.logger.error(`${(e as Error).name}: ${(e as Error).message}`, (e as Error), true);
 
-				const replies = [
-					'An error has occured when executing this command, our developers have been informed.',
-					'If the issue persists, please contact us in our Support Server.'
-				].join('\n');
+				const replies = `${i18n.format('misc:ERROR_OCCURRED')}`;
 
-				return message.reply({ content: replies });
+				return message.reply({ content: replies.substring(0, 84) });
 			}
 		}
 	}

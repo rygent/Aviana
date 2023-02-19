@@ -3,7 +3,7 @@ import Event from '../../lib/structures/Event.js';
 import { Collection } from '@discordjs/collection';
 import type { DiscordAPIError } from '@discordjs/rest';
 import type { CommandInteraction, GuildMember } from 'discord.js';
-import { bold, hideLinkEmbed, hyperlink, italic, underscore } from '@discordjs/formatters';
+import { bold, hideLinkEmbed, italic, underscore } from '@discordjs/formatters';
 import { Links } from '../../lib/utils/Constants.js';
 import { formatArray, formatPermissions, isNsfwChannel, resolveCommandName } from '../../lib/utils/Function.js';
 
@@ -18,14 +18,24 @@ export default class extends Event {
 	public async run(interaction: CommandInteraction<'cached' | 'raw'>) {
 		if (!interaction.isChatInputCommand() && !interaction.isContextMenuCommand()) return;
 
+		let { i18n } = this.client;
+		if (interaction.inCachedGuild()) {
+			const prisma = await this.client.prisma.guild.findFirst({
+				where: { id: interaction.guildId },
+				select: { locale: true }
+			});
+
+			i18n = this.client.i18n.setLocale(prisma!.locale);
+		}
+
 		const command = this.client.interactions.get(resolveCommandName(interaction));
 		if (command) {
 			if (command.disabled && !this.client.owners?.includes(interaction.user.id)) {
-				return interaction.reply({ content: 'This command is currently inaccessible.', ephemeral: true });
+				return interaction.reply({ content: `${i18n.format('misc:COMMAND_DISABLED')}`, ephemeral: true });
 			}
 
 			if (command.guildOnly && !interaction.inCachedGuild()) {
-				return interaction.reply({ content: 'This command cannot be used out of a server.', ephemeral: true });
+				return interaction.reply({ content: `${i18n.format('misc:GUILD_ONLY')}`, ephemeral: true });
 			}
 
 			if (interaction.inGuild()) {
@@ -38,7 +48,7 @@ export default class extends Event {
 						?.missing(memberPermCheck) as string[];
 
 					if (missing.length) {
-						const replies = `You lack the ${formatArray(missing.map(item => underscore(italic(formatPermissions(item)))))} permission(s) to continue.`;
+						const replies = `${i18n.format('misc:MISSING_MEMBER_PERMISSION', { permission: formatArray(missing.map(item => underscore(italic(formatPermissions(item))))) })}`;
 
 						return interaction.reply({ content: replies, ephemeral: true });
 					}
@@ -53,21 +63,19 @@ export default class extends Event {
 						?.missing(clientPermCheck) as string[];
 
 					if (missing.length) {
-						const replies = `I lack the ${formatArray(missing.map(item => underscore(italic(formatPermissions(item)))))} permission(s) to continue.`;
+						const replies = `${i18n.format('misc:MISSING_CLIENT_PERMISSION', { permission: formatArray(missing.map(item => underscore(italic(formatPermissions(item))))) })}`;
 
 						return interaction.reply({ content: replies, ephemeral: true });
 					}
 				}
 
 				if (command.nsfw && !isNsfwChannel(interaction.channel)) {
-					const replies = `This command is only accessible on ${bold('Age-Restricted')} channels.`;
-
-					return interaction.reply({ content: replies, ephemeral: true });
+					return interaction.reply({ content: `${i18n.format('misc:NSFW_COMMAND')}`, ephemeral: true });
 				}
 			}
 
 			if (command.ownerOnly && !this.client.owners?.includes(interaction.user.id)) {
-				return interaction.reply({ content: 'This command is only accessible for developers.', ephemeral: true });
+				return interaction.reply({ content: `${i18n.format('misc:OWNER_ONLY')}`, ephemeral: true });
 			}
 
 			if (!this.client.cooldowns.has(resolveCommandName(interaction))) {
@@ -82,7 +90,7 @@ export default class extends Event {
 
 				if (now < expired) {
 					const duration = (expired - now) / 1e3;
-					return interaction.reply({ content: `You've to wait ${bold(duration.toFixed(2))} second(s) to continue.`, ephemeral: true })
+					return interaction.reply({ content: `${i18n.format('misc:COOLDOWN', { duration: bold(duration.toFixed(2)) })}`, ephemeral: true })
 						.then(() => setTimeout(() => interaction.deleteReply(), expired - now));
 				}
 			}
@@ -91,16 +99,13 @@ export default class extends Event {
 			setTimeout(() => cooldown?.delete(interaction.user.id), command.cooldown);
 
 			try {
-				await command.execute(interaction);
+				await command.execute(interaction, i18n);
 			} catch (e: unknown) {
 				if ((e as DiscordAPIError).name === 'DiscordAPIError[10062]') return;
 				if (interaction.replied) return;
 				this.client.logger.error(`${(e as Error).name}: ${(e as Error).message}`, (e as Error), true);
 
-				const replies = [
-					'An error has occured when executing this command, our developers have been informed.',
-					`If the issue persists, please contact us in our ${hyperlink('Support Server', hideLinkEmbed(Links.SupportServer))}.`
-				].join('\n');
+				const replies = `${i18n.format('misc:ERROR_OCCURRED', { link: hideLinkEmbed(Links.SupportServer) })}`;
 
 				if (interaction.deferred) return interaction.editReply({ content: replies });
 				return interaction.reply({ content: replies, ephemeral: true });
