@@ -31,7 +31,7 @@
     "discord.js": "^14.14.1",
     "dotenv": "^16.4.1",
     "moment": "^2.30.1",
-    "moment-timezone": "^0.5.44",
+    "moment-timezone": "^0.5.45",
     "winston": "^3.11.0"
   },
   "devDependencies": {
