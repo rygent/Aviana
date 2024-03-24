@@ -6325,20 +6325,18 @@ __metadata:
   linkType: hard
 
 "undici@npm:^5.12.0, undici@npm:^5.21.0":
-  version: 5.28.2
-  resolution: "undici@npm:5.28.2"
+  version: 5.28.3
+  resolution: "undici@npm:5.28.3"
   dependencies:
     "@fastify/busboy": "npm:^2.0.0"
-  checksum: 10c0/34385ad9b3ba85309972ee3c1b426dcd19b94a5a6aa9c54499b5f48436c0ecc13a9b1e756a7c6a953eaefa9f4263890625ece5f2719fd774b0852204f5e4d5f9
+  checksum: 10c0/3c559ae50ef3104b7085251445dda6f4de871553b9e290845649d2f80b06c0c9cfcdf741b0029c6b20d36c82e6a74dc815b139fa9a26757d70728074ca6d6f5c
   languageName: node
   linkType: hard
 
 "undici@npm:^6.5.0":
-  version: 6.5.0
-  resolution: "undici@npm:6.5.0"
-  dependencies:
-    "@fastify/busboy": "npm:^2.0.0"
-  checksum: 10c0/e8cbac03167276bfb6eddf1f381b71e73ba7dc6575a99f9ac2820f39570db3998ec8ca0f117ed420bfd9dfc4f1fb7d9bf0d1b66fbbfee0ef803ab62da2f57522
+  version: 6.10.1
+  resolution: "undici@npm:6.10.1"
+  checksum: 10c0/c4cbb7ad30680cf4cb83895051ec8adb068b81e60755081f008c6d070b46d475d14ee52145b7577a24f2f59d475fad2ac6f2761b7f890cc5df2b14ca7250a8e3
   languageName: node
   linkType: hard
 
