@@ -48,7 +48,7 @@
     "@swc/cli": "^0.3.12",
     "@swc/core": "^1.6.1",
     "@types/moment-duration-format": "^2.2.6",
-    "@types/node": "^20.14.2",
+    "@types/node": "^20.14.9",
     "eslint": "^9.5.0",
     "prettier": "^3.3.2",
     "rimraf": "^5.0.7",
