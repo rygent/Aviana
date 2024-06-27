@@ -369,7 +369,7 @@ __metadata:
     bufferutil: "npm:^4.0.8"
     colorette: "npm:^2.0.20"
     commander: "npm:^12.1.0"
-    discord-api-types: "npm:^0.37.89"
+    discord-api-types: "npm:^0.37.91"
     discord.js: "npm:^14.15.3"
     dotenv: "npm:^16.4.5"
     eslint: "npm:^9.5.0"
@@ -2451,10 +2451,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"discord-api-types@npm:^0.37.84, discord-api-types@npm:^0.37.89":
+"discord-api-types@npm:^0.37.84":
   version: 0.37.89
   resolution: "discord-api-types@npm:0.37.89"
   checksum: 10c0/2f28d82559f31f3bc84e32b98ed5f2b4cca5e2cf5631d25119816c7c2d81a43184f14fa0402522ba64034c56b00fa88815915e06657fd2eb9397006c51b5924c
+  languageName: node
+  linkType: hard
+
+"discord-api-types@npm:^0.37.91":
+  version: 0.37.91
+  resolution: "discord-api-types@npm:0.37.91"
+  checksum: 10c0/127ac3e2000ccc185b1f66756c56cfdf32ba81ec8ac8b01436f5fcc2bec90d1f9296dd93bffc07291d81fbc2836dbdae39bc5423c5ad0b8c177e55e7cbd62620
   languageName: node
   linkType: hard
 

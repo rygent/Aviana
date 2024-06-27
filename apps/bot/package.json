@@ -34,7 +34,7 @@
     "@sapphire/utilities": "^3.16.2",
     "colorette": "^2.0.20",
     "commander": "^12.1.0",
-    "discord-api-types": "^0.37.89",
+    "discord-api-types": "^0.37.91",
     "discord.js": "^14.15.3",
     "dotenv": "^16.4.5",
     "globby": "^14.0.1",
